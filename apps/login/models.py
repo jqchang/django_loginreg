@@ -41,6 +41,7 @@ class UserManager(models.Manager):
             try:
                 user = User.objects.create(first_name=postData["first_name"], last_name=postData["last_name"],email=postData["email"],dob=dob,pw_hash=bcrypt.hashpw(postData["password"].encode(), bcrypt.gensalt()))
             except OverflowError:
+                # Encountered an error when attempting to input 1/1/1900 as date of birth
                 errors.append("Invalid date of birth.")
                 return (False, errors)
             return (True, user)
