@@ -22,12 +22,12 @@ def process(request):
     if request.method != 'POST':
         return redirect('/')
     else:
-        user = User.objects.validate(request.POST)
-        if user[0] == True:
-            request.session["id"] = user[1].id
+        user_valid = User.objects.validate(request.POST)
+        if user_valid[0] == True:
+            request.session["id"] = user_valid[1].id
             return redirect('/success')
         else:
-            for msg in user[1]:
+            for msg in user_valid[1]:
                 messages.add_message(request, messages.INFO, msg)
             return redirect('/')
 

@@ -7,8 +7,9 @@ import bcrypt, re
 # Create your models here.
 class UserManager(models.Manager):
     def validate(self, postData):
-        errors = []
+        errors = []     # array of error messages
         if postData["first_name"] == "First Name" or len(postData["first_name"]) == 0:
+            # if first name has not been entered
             errors.append("Please enter a first name.")
         elif len(postData["first_name"]) < 2:
             errors.append("First name must be between 2-45 characters.")
@@ -25,6 +26,7 @@ class UserManager(models.Manager):
         elif not re.search(r'^[a-zA-Z0-9.+_-]+@[a-zA-Z0-9._-]+.[a-zA-Z]+$', postData["email"]):
             errors.append("Invalid email address.")
         elif len(User.objects.filter(email=postData["email"])) > 0:
+            # if list of users w/ this email is empty
             errors.append("Email address is already registered.")
         try:
             dob = datetime.strptime(postData["dob"], "%m/%d/%Y")
@@ -45,8 +47,10 @@ class UserManager(models.Manager):
                 errors.append("Invalid date of birth.")
                 return (False, errors)
             return (True, user)
+            # returns (success code, user object)
         else:
             return (False, errors)
+            # returns (failure, error list)
 
     def authenticate(self, postData):
         if "email" in postData and "password" in postData:
